@@ -8,12 +8,15 @@ Gem::Specification.new do |gem|
   gem.version       = Shellutils::VERSION
   gem.authors       = ["Kazuhiro Yamada"]
   gem.email         = ["kyamada@sonix.asia"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.description   = %q{Shell utils}
+  gem.summary       = %q{Shell utils}
+  gem.homepage      = "https://github.com/k-yamada/shellutils"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
+
+  gem.add_dependency 'thor'
+  gem.add_development_dependency 'rspec'
 end
