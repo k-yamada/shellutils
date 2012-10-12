@@ -2,6 +2,8 @@
 
 require 'thor'
 require 'timeout'
+require 'pty'
+require 'expect'
 
 module ShellUtils
   SUDO_PWD_PATH = ".sudo_pwd"
@@ -103,14 +105,10 @@ module ShellUtils
       puts cmd
       PTY.spawn(cmd) do |r, w|
         w.sync = true
-        expect_result = r.expect(/[Pp]assword.*:.*$/)
-        if expect_result
-          begin
-            timeout(1) {
-              w.puts(get_sudo_pwd)
-            }
-          rescue Exception => err
-            error("the sudo command timed out。password=#{get_sudo_pwd}\nPlease change the password ex) set_sudo_pwd PASSWORD")
+        if r.expect(/[Pp]assword.*:.*$/)
+          w.puts(get_sudo_pwd)
+          if r.expect(/[Pp]assword.*:.*$/)
+            error("the sudo password is incorrect. password=#{get_sudo_pwd}\nPlease change the password ex) set_sudo_pwd PASSWORD")
           end
         end
         puts "-> ok"

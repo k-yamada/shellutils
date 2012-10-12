@@ -5,6 +5,10 @@ module ShellUtils
     it "shoudl exec shell command" do
       ShellUtils.sh "pwd"
     end
+
+    it "shoudl exec shell command" do
+      ShellUtils.sudo "pwd"
+    end
     
   end
 
