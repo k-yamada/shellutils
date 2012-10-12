@@ -105,8 +105,11 @@ module ShellUtils
       puts cmd
       PTY.spawn(cmd) do |r, w|
         w.sync = true
+        w.flush
         if r.expect(/[Pp]assword.*:.*$/)
+          w.flush
           w.puts(get_sudo_pwd)
+          w.flush
           if r.expect(/[Pp]assword.*:.*$/)
             error("the sudo password is incorrect. password=#{get_sudo_pwd}\nPlease change the password ex) set_sudo_pwd PASSWORD")
           end
