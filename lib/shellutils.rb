@@ -110,8 +110,11 @@ module ShellUtils
           w.flush
           w.puts(get_sudo_pwd)
           w.flush
-          if r.expect(/[Pp]assword.*:.*$/)
-            error("the sudo password is incorrect. password=#{get_sudo_pwd}\nPlease change the password ex) set_sudo_pwd PASSWORD")
+          begin
+            if r.expect(/[Pp]assword.*:.*$/)
+              error("the sudo password is incorrect. password=#{get_sudo_pwd}\nPlease change the password ex) set_sudo_pwd PASSWORD")
+            end
+          rescue
           end
         end
         puts "-> ok"
