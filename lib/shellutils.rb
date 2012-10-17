@@ -21,6 +21,14 @@ module ShellUtils
       `#{cmd}`
     end
 
+    def ruby(cmd)
+      sh "ruby #{cmd}"
+    end
+
+    def jruby(cmd)
+      sh "jruby -S #{cmd}"
+    end
+
     def file_write(filepath, str)
       File.open(filepath, "w") {|f| f.write str}
     end
