@@ -112,6 +112,7 @@ module ShellUtils
     def exec_cmd_and_clear_password(cmd)
       puts cmd
       PTY.spawn(cmd) do |r, w|
+        w.flush
         w.sync = true
         w.flush
         if r.expect(/[Pp]assword.*:.*$/)
@@ -119,16 +120,18 @@ module ShellUtils
           w.puts(get_sudo_pwd)
           w.flush
           begin
+            w.flush
             if r.expect(/[Pp]assword.*:.*$/)
               error("the sudo password is incorrect. password=#{get_sudo_pwd}\nPlease change the password ex) set_sudo_pwd PASSWORD")
             end
           rescue
           end
         end
+        w.flush
         puts "-> ok"
-        w.flush              
-        begin                
-          puts r.read        
+        w.flush
+        begin
+          puts r.read
         rescue Errno::EIO # GNU/Linux raises EIO.
         end
       end
