@@ -4,19 +4,19 @@ require 'tempfile'
 module ShellUtils
   describe ShellUtils do
     describe ".sh" do
-      it "exec shell command" do
+      it "should exec shell command" do
         ShellUtils.sh "pwd"
       end
     end
 
     describe ".sudo" do
-      #it "exec shell command" do
-      #  ShellUtils.sudo "pwd"
-      #end
+      it "should exec shell command" do
+        ShellUtils.sudo "pwd"
+      end
     end
 
-    describe ".add_config_text" do
-      it "add config text" do
+    describe ".add_config" do
+      it "should add config" do
         config_text = <<-EOF
 config1=value1
 config2=value2
@@ -29,7 +29,7 @@ config2=value2
         tf.close!
       end
       
-      it "overwrite config text" do
+      it "should overwrite config if already exists" do
         config_text = <<-EOF
 config3=value3
 config4=value4
