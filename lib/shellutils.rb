@@ -160,6 +160,10 @@ module ShellUtils
       File.open(file_path, "w") {|f| f.write(text)}
     end
 
+    def current_user
+      `whoami`.chomp
+    end
+
     private 
 
     def get_config_header(config_title, comment_char)

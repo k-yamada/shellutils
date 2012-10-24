@@ -15,6 +15,12 @@ module ShellUtils
       end
     end
 
+    describe ".current_user" do
+      it "should get current user" do
+        ShellUtils.current_user.should == `whoami`.chomp
+      end
+    end
+
     describe ".add_config" do
       it "should add config" do
         config_text = <<-EOF
