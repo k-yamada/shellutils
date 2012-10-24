@@ -6,7 +6,7 @@ require 'pty'
 require 'expect'
 
 module ShellUtils
-  SUDO_PWD_PATH = ".sudo_pwd"
+  SUDO_PWD_PATH = File.expand_path("~/.sudo_pwd")
 
   class << self
 
@@ -31,6 +31,10 @@ module ShellUtils
 
     def file_write(filepath, str)
       File.open(filepath, "w") {|f| f.write str}
+    end
+
+    def file_add(filepath, str)
+      File.open(filepath, "a") {|f| f.write str}
     end
 
     def file_read(filepath)
@@ -105,7 +109,7 @@ module ShellUtils
       raise
     end
   
-    def current_method(index = 0)
+    def current_method(index=0)
       caller[index].scan(/`(.*)'/).flatten.to_s
     end
    
@@ -128,8 +132,6 @@ module ShellUtils
           end
         end
         w.flush
-        puts "-> ok"
-        w.flush
         begin
           puts r.read
         rescue Errno::EIO # GNU/Linux raises EIO.
@@ -144,7 +146,32 @@ module ShellUtils
     def rvmsudo(cmd)
       exec_cmd_and_clear_password("rvmsudo #{cmd}")
     end
-  
+
+    def add_config(file_path, config_title, config_content, comment_char="#")
+      text = File.read(file_path)
+
+      # delete config if already exists
+      text.gsub!(/#{get_config_header(config_title, comment_char)}.*#{get_config_footer(comment_char)}/m, "")
+
+      # add config
+      text << get_config_header(config_title, comment_char)
+      text << config_content
+      text << get_config_footer(comment_char)
+      File.open(file_path, "w") {|f| f.write(text)}
+    end
+
+    private 
+
+    def get_config_header(config_title, comment_char)
+      "#{comment_char * 2} #{config_title}\n"
+    end
+
+    def get_config_footer(comment_char)
+      "#{comment_char * 2} END\n"
+    end
+
   end
+
+
 end # ShellUtils
 
