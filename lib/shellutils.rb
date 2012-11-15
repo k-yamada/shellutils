@@ -135,6 +135,7 @@ module ShellUtils
         begin
           puts r.read
         rescue Errno::EIO # GNU/Linux raises EIO.
+        rescue IOError
         end
       end
     end
