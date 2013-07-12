@@ -115,28 +115,33 @@ module ShellUtils
 
     def exec_cmd_and_clear_password(cmd)
       puts cmd
-      PTY.spawn(cmd) do |r, w|
-        w.flush
-        w.sync = true
-        w.flush
-        if r.expect(/[Pp]assword.*:.*$/, 1)
+      begin
+        PTY.spawn(cmd) do |r, w|
           w.flush
-          w.puts(get_sudo_pwd)
+          w.sync = true
+          w.flush
+          if r.expect(/[Pp]assword.*:.*$/, 1)
+            w.flush
+            w.puts(get_sudo_pwd)
+            w.flush
+            begin
+              w.flush
+              if r.expect(/[Pp]assword.*:.*$/, 1)
+                error("the sudo password is incorrect. password=#{get_sudo_pwd}\nPlease change the password ex) set_sudo_pwd PASSWORD")
+              end
+            rescue
+            end
+          end
           w.flush
           begin
-            w.flush
-            if r.expect(/[Pp]assword.*:.*$/, 1)
-              error("the sudo password is incorrect. password=#{get_sudo_pwd}\nPlease change the password ex) set_sudo_pwd PASSWORD")
-            end
-          rescue
+            puts r.read
+          rescue Errno::EIO # GNU/Linux raises EIO.
+          rescue IOError
           end
         end
-        w.flush
-        begin
-          puts r.read
-        rescue Errno::EIO # GNU/Linux raises EIO.
-        rescue IOError
-        end
+      rescue Errno::EIO
+        # If the password prompt does not appear.
+        `#{cmd}`
       end
     end
 
