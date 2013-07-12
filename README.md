@@ -20,6 +20,14 @@ Or install it yourself as:
 
 Take a look at the [spec file](https://github.com/k-yamada/shellutils/blob/master/spec/shellutils_spec.rb)
 
+## build
+
+    $ rake build
+
+## push to rubygems
+
+    $ gem push pkg/shellutils-xxxx.gem 
+
 ## Contributing
 
 1. Fork it
